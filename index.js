@@ -3,26 +3,27 @@ const axios = require("axios");
 const { response } = require('express');
 
 const main = async () => {
-  var response = await axios.get("https://pokeapi.co/api/v2/pokemon/pikachu");
-  var {
+  const response = await axios.get("https://pokeapi.co/api/v2/pokemon/pikachu");
+  const {
     data: { moves },
   } = response;
-  var movimientos = moves.map((movimientos)=>{
-    return {
-      move: movimientos.move,
-    };
+  let pokeMoves = [];
+  moves.map((movimientos)=>{
+    pokeMoves.push(movimientos.move);
   })
-  console.log(movimientos);  
+  return pokeMoves
 };
-main();
+
 const app = express();
 const PORT = 3000;
 
 /* El servidor recibe la solicitud y envia un hola mundo en respuesta*/
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+    const pokemonMoves = await main();
      res.json({
-         message: "Los datos obtenidos fueron: "
-
+      statusCode: 200,
+      message: "request was proceced succesfully",
+      data: pokemonMoves
      });
 });
 
